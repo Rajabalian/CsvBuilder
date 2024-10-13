@@ -5,9 +5,7 @@ namespace CsvBuilder
     public class CsvBuilder
     {
 
-        public record Item<T>(string Name, Func<T, object?> Record);
-
-        public byte[] ExportAsBytes<T>(IEnumerable<T> list, params Item<T>[] items) where T : class
+        public byte[] ExportAsBytes<T>(IEnumerable<T> list, params (string, Func<T, object?>)[] items) where T : class
         {
             var csvContent = new StringBuilder();
 
@@ -15,7 +13,7 @@ namespace CsvBuilder
             for (var index = 0; index < items.Length; index++)
             {
                 var property = items[index];
-                csvContent.Append(EscapeComma(property.Name));
+                csvContent.Append(EscapeComma(property.Item1));
                 if (index < items.Length - 1)
                 {
                     csvContent.Append(',');
@@ -30,7 +28,7 @@ namespace CsvBuilder
                 var index = 0;
                 foreach (var row in items)
                 {
-                    var value  = row.Record(item)?.ToString();
+                    var value = row.Item2(item)?.ToString();
                     csvContent.Append(EscapeComma(value));
                     if (index < items.Length - 1)
                     {
