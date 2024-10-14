@@ -2,19 +2,37 @@
 
 namespace CsvBuilder
 {
-    public class CsvBuilder
+    public class CsvBuilder<T> where T : class
     {
+        public record Column(string Title, Func<T, object?> Comulmns);
 
-        public byte[] ExportAsBytes<T>(IEnumerable<T> list, params (string, Func<T, object?>)[] items) where T : class
+
+        private readonly List<Column> _columns = [];
+
+
+        public CsvBuilder<T> AddColumn(string title, Func<T, object?> comulmns)
         {
+            _columns.Add(new Column(title,comulmns));
+
+            return this;
+        }
+
+        public byte[] ExportAsBytes (IEnumerable<T> list) 
+        {
+
+            if (!_columns.Any())
+            {
+                throw new Exception("befor call export csv,add columns need for export.");
+            }
+
             var csvContent = new StringBuilder();
 
             //- heads
-            for (var index = 0; index < items.Length; index++)
+            for (var index = 0; index < _columns.Count; index++)
             {
-                var property = items[index];
-                csvContent.Append(EscapeComma(property.Item1));
-                if (index < items.Length - 1)
+                var property = _columns[index];
+                csvContent.Append(EscapeComma(property.Title));
+                if (index < _columns.Count - 1)
                 {
                     csvContent.Append(',');
                 }
@@ -26,11 +44,10 @@ namespace CsvBuilder
             foreach (var item in list)
             {
                 var index = 0;
-                foreach (var row in items)
+                foreach (var value in _columns.Select(row => row.Comulmns(item)?.ToString()))
                 {
-                    var value = row.Item2(item)?.ToString();
                     csvContent.Append(EscapeComma(value));
-                    if (index < items.Length - 1)
+                    if (index < _columns.Count - 1)
                     {
                         csvContent.Append(',');
                     }
@@ -58,5 +75,7 @@ namespace CsvBuilder
             return mustQuote ? $"\"{str.Replace("\"", "\"\"")}\"" : str;
         }
 
+
+       
     }
 }
