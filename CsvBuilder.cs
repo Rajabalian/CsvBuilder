@@ -4,7 +4,7 @@ namespace CsvBuilder
 {
     public class CsvBuilder<T> where T : class
     {
-        public record Column(string Title, Func<T, object?> Comulmns);
+        public record Column(string Title, Func<T, object?> Columns);
 
 
         private readonly List<Column> _columns = [];
@@ -44,7 +44,7 @@ namespace CsvBuilder
             foreach (var item in list)
             {
                 var index = 0;
-                foreach (var value in _columns.Select(row => row.Comulmns(item)?.ToString()))
+                foreach (var value in _columns.Select(row => row.Columns(item)?.ToString()))
                 {
                     csvContent.Append(EscapeComma(value));
                     if (index < _columns.Count - 1)
