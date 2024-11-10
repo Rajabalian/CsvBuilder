@@ -9,8 +9,9 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/Rajabalian/CsvBuilder</RepositoryUrl>
-		<Version>1.0.3</Version>
+		<Version>1.0.4</Version>
 		<PackageIcon>icon.png</PackageIcon>
+		<Description>Export your list to a CSV file with ease.</Description>
 	</PropertyGroup>
 
 	<ItemGroup>

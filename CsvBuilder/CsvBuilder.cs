@@ -10,9 +10,9 @@ namespace CsvBuilder
         private readonly List<Column> _columns = [];
 
 
-        public CsvBuilder<T> AddColumn(string title, Func<T, object?> comulmns)
+        public CsvBuilder<T> AddColumn(string title, Func<T, object?> column)
         {
-            _columns.Add(new Column(title,comulmns));
+            _columns.Add(new Column(title,column));
 
             return this;
         }
