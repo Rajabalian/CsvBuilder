@@ -1,8 +1,10 @@
 # CsvBuilder
-تهیه فایل CSV از لیست ورودی
+Export your list to a CSV file with ease.
 
 #Sample Code
 
+     [ApiController]
+    [Route("[controller]")]
     public class CsvDownloadController : ControllerBase
     {
 
@@ -21,13 +23,13 @@
                 new("Porsche Macan (2018)",21000,0)
             };
 
-            var csvBuilder = new CsvBuilder.CsvBuilder<Product>()
+            var fileContent = new CsvBuilder.CsvBuilder<Product>()
                 .AddColumn("Name", i => i.Name.ToUpper())
                 .AddColumn("Price", i => i.Price.ToString("C"))
                 .AddColumn("Stock", i => i.Stock == 0 ? "-" : i.Stock)
                 .ExportAsBytes(list);
 
-            using var memoryStream = new MemoryStream(csvBuilder);
-            return File(memoryStream.ToArray(), "application/octet-stream", "file.csv");
+           
+            return File(fileContent, "application/octet-stream", "file.csv");
         }
     }
